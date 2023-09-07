@@ -71,6 +71,7 @@ func Webhook(c echo.Context) error {
 
 	// ......
 
+	return nil
 }
 
 func getCandidate(id string) Candidate {
