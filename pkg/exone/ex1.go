@@ -9,8 +9,8 @@ import (
 )
 
 /*
-We receive notification via a webhook, for new candidates status change. The webhook contains only a little part of the resource we need in our platfomr.
-For each request we need to retrieve the relevant infomration needed and store them in a database.
+We receive notification via a webhook, for candidates changes. The webhook contains only a little part of the resource we need in our platform.
+For each request we need to retrieve the relevant information needed and store them in a database.
 The operation of retrieval is syncronous.
 Lately we noticed an increased number of errors with http status 429.
 You are assigned to the team that needs to undestand and fix the problem
@@ -69,15 +69,45 @@ func Webhook(c echo.Context) error {
 		return err
 	}
 
-	// ......
+	candidate, err := getCandidate(hp.Data.Candidate)
+	if err != nil {
+		return err
+	}
+
+	job, err := getJob(hp.Data.Job)
+	if err != nil {
+		return err
+	}
+
+	err = storeCandidate(*candidate)
+	if err != nil {
+		return err
+	}
+
+	err = storeJob(*job)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func getCandidate(id string) Candidate {
-	return Candidate{}
+func getCandidate(id string) (*Candidate, error) {
+	//retrieve the candidate information from external service
+	return &Candidate{}, nil
 }
 
-func getJob(id string) Job {
-	return Job{}
+func getJob(id string) (*Job, error) {
+	//retrieve the job information from external service
+	return &Job{}, nil
+}
+
+func storeCandidate(c Candidate) error {
+	// store stuff in database
+	return nil
+}
+
+func storeJob(j Job) error {
+	//store stuff in database
+	return nil
 }
