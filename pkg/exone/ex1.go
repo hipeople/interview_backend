@@ -2,19 +2,16 @@ package exone
 
 import (
 	"encoding/json"
-	"io"
 	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
-/*
-We receive notification via a webhook, for candidates changes. The webhook contains only a little part of the resource we need in our platform.
-For each request we need to retrieve the relevant information needed and store them in a database.
-The operation of retrieval is syncronous.
-Lately we noticed an increased number of errors with http status 429.
-You are assigned to the team that needs to undestand and fix the problem
-*/
+// We receive notification via a webhook, for candidates changes. The webhook contains only a little part of the resource we need in our platform.
+// For each request we need to retrieve the relevant information needed and store them in a database.
+// The operation of retrieval is syncronous.
+// Lately we noticed an increased number of errors with http status 429.
+// You are assigned to the team that needs to undestand and fix the problem
 
 type Hook struct {
 	ID       string `json:"id"`
@@ -58,14 +55,8 @@ type Job struct {
 }
 
 func Webhook(c echo.Context) error {
-
-	body, err := io.ReadAll(c.Request().Body)
-	if err != nil {
-		return err
-	}
-
 	var hp HookPayload[Application]
-	if err := json.Unmarshal(body, &hp); err != nil {
+	if err := json.NewDecoder(c.Request().Body).Decode(&hp); err != nil {
 		return err
 	}
 
@@ -79,13 +70,11 @@ func Webhook(c echo.Context) error {
 		return err
 	}
 
-	err = storeCandidate(*candidate)
-	if err != nil {
+	if err := storeCandidate(candidate); err != nil {
 		return err
 	}
 
-	err = storeJob(*job)
-	if err != nil {
+	if err := storeJob(job); err != nil {
 		return err
 	}
 
@@ -93,21 +82,21 @@ func Webhook(c echo.Context) error {
 }
 
 func getCandidate(id string) (*Candidate, error) {
-	//retrieve the candidate information from external service
+	// retrieve the candidate information from external service
 	return &Candidate{}, nil
 }
 
 func getJob(id string) (*Job, error) {
-	//retrieve the job information from external service
+	// retrieve the job information from external service
 	return &Job{}, nil
 }
 
-func storeCandidate(c Candidate) error {
+func storeCandidate(c *Candidate) error {
 	// store stuff in database
 	return nil
 }
 
-func storeJob(j Job) error {
-	//store stuff in database
+func storeJob(j *Job) error {
+	// store stuff in database
 	return nil
 }
