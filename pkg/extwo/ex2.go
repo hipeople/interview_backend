@@ -1,23 +1,7 @@
 package extwo
 
 /*
-	In our candidate view we compute the assessment status using 4 boolean values. Those value are stores in our database, then we have a frontend
-	algo that computes a status using the values.
-	Product wants two new features to be delivered: filtering and sorting on those statuses, we also need to keep supporting pagination.
-	How can we approach the problem? Which data structure do we need?
+	Products wants to start scraping websistes for informations about job roles, and skills requestsd to build a better test library.
+ 	Engineering is asked to come up with a first implementeation that can receive urls and store the resutls in a database for furure analysis.
+  	The system should be able to work in parallel, handling errors from the scraping process gracefully.
 */
-
-type Status string
-
-const (
-	StatusSubmitted  Status = "submitted"
-	StatusExpired    Status = "expired"
-	StatusInProgress Status = "in-progress"
-	StatusDisabled   Status = "disabled"
-)
-
-type Row struct {
-	SubmittedAt int
-	ExpiredAt   int
-	IsActive    bool
-}
